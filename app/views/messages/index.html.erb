@@ -1,0 +1,40 @@
+<h1>speee掲示板</h1>
+
+<%= form_for(@message) do |f| %>
+  <% if @message.errors.any? %>
+    <% @message.errors.full_messages.each do |err| %>
+      <font color="red"><%= err %></font><br>
+    <% end %>
+  <% end %>
+  <div><%= f.label :名前%><%= f.text_field :title, :value => session[:name] %></div>
+  <div><%= f.label :メール%><%= f.email_field :mail, :value => session[:mail]%></div>
+  <div><%= f.label :コメント%><%= f.text_area :comment %></div>
+  <%= f.submit "書き込み"%><br>
+<% end %>
+
+<br>
+
+<%= search_form_for @search do |f| %>
+  <%= f.label :title_cont, '検索する名前' %>
+  <%= f.text_field :title_cont %>
+  <br />
+  <%= f.label :created_at, '作成日' %>
+  <%= f.date_select :created_at_gteq, include_blank: true %>〜
+  <%= f.date_select :created_at_lteq_end_of_day, include_blank: true %>
+  <div>
+    <%= f.submit '検索する' %>
+  </div>
+<% end %>
+<br>
+
+<th><%= sort_link(@search, :created_at, '作成日時でソート') %></th><br />
+<hr>
+
+<% @pages.each do |msg| %>
+  <%= msg.id %> :　名前： <%= msg.title %> : <%= msg.created_at %><br>
+  mail:<%= msg.mail%>
+  <pre><%= msg.comment %></pre>
+  <br>
+  <hr>
+<% end %>
+<%= paginate @pages %>
